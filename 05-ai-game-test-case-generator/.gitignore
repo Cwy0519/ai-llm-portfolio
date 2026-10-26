@@ -1,0 +1,23 @@
+# 虚拟环境
+.venv/
+venv/
+
+# Python 缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# 密钥文件：绝对不能提交
+.env
+.env.local
+
+# 运行产物
+exports/
+logs/
+*.log
+
+# 编辑器
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

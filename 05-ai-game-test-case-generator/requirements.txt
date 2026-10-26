@@ -1,0 +1,5 @@
+# 依赖清单
+gradio>=5.0,<7.0
+openai>=1.40,<3.0
+python-dotenv>=1.0,<2.0
+openpyxl>=3.1,<4.0

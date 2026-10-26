@@ -1,11 +1,11 @@
 # 陈国成 · 个人作品集
 
 > 2027 届 · 广东创新科技职业学院 · 软件技术（专科）
-> 4 个**个人独立完成**的项目，累计 **211 个自动化测试用例**
+> **5 个个人独立完成的项目，累计 291 个自动化测试用例**
 
 ## 关于我
 
-- 方向：**AI 大模型应用开发** / **软件测试（游戏测试方向）**
+- 方向：**软件测试（游戏测试方向）** / **AI 大模型应用开发**
 - 习惯：每个项目都配套离线自测脚本，改完代码先跑测试再交付，保证「没改坏」
 - 联系：13268679617 ｜ 2122361382@qq.com
 
@@ -13,6 +13,7 @@
 
 | # | 项目 | 技术栈 | 自测用例 | 一句话说明 |
 |---|------|--------|:---:|------------|
+| 05 | [AI 游戏测试用例生成器](05-ai-game-test-case-generator/) | Python · Gradio · 大模型 · openpyxl | **80**（pytest） | **最新**：输入游戏功能点，生成标准用例表（优先级/类型/设计方法/步骤/预期），一键导出 Excel |
 | 01 | [AI 智能写作助手](01-ai-writing-assistant/) | Python · Gradio · 大模型流式接口 | **119**（pytest） | 5 种写作场景 × 3 种语气，提示词模板由数据类驱动 |
 | 02 | [AI 学习卡片生成器](02-ai-study-cards/) | Python · Gradio · 线程池 · JSON 模式 | **68** | 输入材料生成 5 种复习卡片，多类型并行 + 一键导出 |
 | 03 | [AI 翻译与润色工具](03-ai-translator/) | Python · Gradio · 大模型接口 | **24** | 7 种语言、三模式、术语表、长文本三级切分 |
@@ -20,13 +21,17 @@
 
 ## 界面截图
 
-| AI 智能写作助手 | AI 学习卡片生成器 |
+| AI 游戏测试用例生成器（最新） | AI 智能写作助手 |
 |---|---|
-| ![](01-ai-writing-assistant/docs/screenshot.png) | ![](02-ai-study-cards/docs/ui-home.png) |
+| ![](05-ai-game-test-case-generator/docs/ui-home.png) | ![](01-ai-writing-assistant/docs/screenshot.png) |
 
-| AI 翻译与润色工具 | 学生成绩管理系统 |
+| AI 学习卡片生成器 | AI 翻译与润色工具 |
 |---|---|
-| ![](03-ai-translator/docs/ui-home.png) | ![](04-student-grade-system/docs/screenshots/page-score.png) |
+| ![](02-ai-study-cards/docs/ui-home.png) | ![](03-ai-translator/docs/ui-home.png) |
+
+| 学生成绩管理系统（成绩管理页） |
+|---|
+| ![](04-student-grade-system/docs/screenshots/page-score.png) |
 
 ## 每个项目怎么跑
 
@@ -46,6 +51,6 @@ python app.py                        # 启动
 
 ## 说明
 
-- 以上 4 个项目均由本人独立完成：需求梳理、编码实现、测试验证、文档与答辩材料
+- 以上 5 个项目均由本人独立完成：需求梳理、编码实现、测试验证、文档与答辩材料
 - 项目用于学习与实践演示，接口费用由使用者自行承担
 - 大模型接口兼容 OpenAI 协议，可换成 DeepSeek / 智谱 / 通义 / 月之暗面 / 本地 Ollama，只需改 `.env` 两行
