@@ -1,0 +1,85 @@
+# ============================================================
+#  学生成绩管理系统  主配置
+#  默认使用 H2 嵌入式数据库（无需安装任何数据库软件）
+#  切换 MySQL：启动时加参数 --spring.profiles.active=mysql
+# ============================================================
+server:
+  port: 8080
+  servlet:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  application:
+    name: student-grade-system
+
+  # ---------- 默认数据源：H2 内存数据库（MySQL 兼容模式） ----------
+  # 设计说明：
+  #   本项目为单机教学演示系统，采用内存模式可彻底避免
+  #   "进程被强杀导致数据库文件只读/损坏"的问题。
+  #   每次启动自动加载演示数据，保证答辩演示时状态一致、可控。
+  #
+  #   如需数据持久保存，可将 url 改为：
+  #   jdbc:h2:file:./data/sgs;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+  #   （注意：强制结束进程可能导致数据库文件锁定，此时运行 reset-db.bat 重置）
+  datasource:
+    url: jdbc:h2:mem:sgs;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ''
+    hikari:
+      auto-commit: true
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+  # H2 Web 控制台：在浏览器中直接查看表结构与数据（答辩演示用）
+  # 访问地址：http://localhost:8080/h2-console
+  # JDBC URL：jdbc:h2:mem:sgs   用户名：sa   密码：留空
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: false
+
+  jpa:
+    hibernate:
+      ddl-auto: none          # 使用 schema.sql / data.sql 初始化，不用自动建表
+    open-in-view: false
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
+
+  # 启动时执行初始化脚本
+  # 脚本已改为幂等写法（MERGE INTO），每次启动执行也安全，不会重复插入
+  sql:
+    init:
+      mode: always
+      encoding: UTF-8
+      continue-on-error: false
+      schema-locations: classpath:db/schema-h2.sql
+      data-locations: classpath:db/data-h2.sql
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: Asia/Shanghai
+
+# ---------- 业务配置 ----------
+sgs:
+  # 登录令牌有效期（分钟）
+  token-expire-minutes: 120
+  # 演示账号说明
+  demo-accounts:
+    - "管理员 admin / 123456"
+    - "教师   teacher1 / 123456"
+    - "学生   student1 / 123456"
+
+logging:
+  level:
+    root: INFO
+    com.sgs: DEBUG
+    org.springframework.web: INFO

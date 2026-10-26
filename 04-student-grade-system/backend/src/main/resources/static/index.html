@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学生成绩管理系统</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- ECharts 数据可视化 -->
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+</head>
+<body>
+
+<!-- ==================== 登录页 ==================== -->
+<div id="loginPage" class="login-page">
+    <!-- 背景光球 -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+
+    <div class="login-box">
+        <div class="login-logo">◈</div>
+        <h1>学生成绩管理系统</h1>
+        <p class="subtitle">Student Grade Management System</p>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="username" placeholder="请输入用户名" autocomplete="username" required>
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="password" placeholder="请输入密码" autocomplete="current-password" required>
+            </div>
+            <button type="submit" class="btn-primary">登 录</button>
+            <p id="loginError" class="error-msg"></p>
+        </form>
+        <div class="demo-accounts">
+            <p class="demo-title">演示账号（密码均为 123456）</p>
+            <div class="demo-list">
+                <span onclick="fillLogin('admin')">管理员 admin</span>
+                <span onclick="fillLogin('teacher1')">教师 teacher1</span>
+                <span onclick="fillLogin('student1')">学生 student1</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ==================== 主界面 ==================== -->
+<div id="mainPage" class="main-page" style="display:none">
+    <aside class="sidebar">
+        <div class="logo">成绩管理系统</div>
+        <nav id="navMenu"></nav>
+        <div class="sidebar-footer">
+            <button onclick="logout()" class="btn-logout">退出登录</button>
+        </div>
+    </aside>
+
+    <main class="content">
+        <header class="topbar">
+            <h2 id="pageTitle">仪表盘</h2>
+            <div class="user-info">
+                <span id="userName"></span>
+                <span id="userRole" class="role-badge"></span>
+            </div>
+        </header>
+
+        <div class="page-container">
+
+            <!-- ---------- 仪表盘 ---------- -->
+            <section id="page-dashboard" class="page active">
+                <div class="stat-cards">
+                    <div class="stat-card">
+                        <div class="stat-label">总成绩记录</div>
+                        <div class="stat-value" id="statTotal">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">及格率</div>
+                        <div class="stat-value" id="statPassRate">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">优秀人数</div>
+                        <div class="stat-value" id="statExcellent">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">不及格人数</div>
+                        <div class="stat-value" id="statFail">-</div>
+                    </div>
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>成绩分布</h3>
+                        <div id="chartDistribution" class="chart"></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>及格率</h3>
+                        <div id="chartPassRate" class="chart"></div>
+                    </div>
+                </div>
+
+                <div class="chart-grid">
+                    <div class="chart-card">
+                        <h3>课程平均分对比</h3>
+                        <div id="chartCourseAvg" class="chart"></div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>班级平均分对比</h3>
+                        <div id="chartClassAvg" class="chart"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ---------- 成绩管理 ---------- -->
+            <section id="page-score" class="page">
+                <div class="toolbar">
+                    <select id="semesterFilter" onchange="loadScores()">
+                        <option value="">全部学期</option>
+                    </select>
+                    <button class="btn-primary" onclick="openScoreModal()" id="btnAddScore">录入成绩</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>学号</th><th>姓名</th><th>班级</th><th>课程</th>
+                            <th>平时</th><th>期中</th><th>期末</th>
+                            <th class="col-total">总评</th><th>绩点</th><th>学期</th>
+                        </tr>
+                        </thead>
+                        <tbody id="scoreTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ---------- 学生管理 ---------- -->
+            <section id="page-student" class="page">
+                <div class="toolbar">
+                    <button class="btn-primary" onclick="openStudentModal()">新增学生</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr><th>学号</th><th>姓名</th><th>性别</th><th>班级</th>
+                            <th>入学年份</th><th>账号</th><th>电话</th><th>操作</th></tr>
+                        </thead>
+                        <tbody id="studentTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ---------- 教师管理 ---------- -->
+            <section id="page-teacher" class="page">
+                <div class="toolbar">
+                    <button class="btn-primary" onclick="openTeacherModal()">新增教师</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr><th>工号</th><th>姓名</th><th>性别</th><th>职称</th>
+                            <th>账号</th><th>电话</th></tr>
+                        </thead>
+                        <tbody id="teacherTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ---------- 课程管理 ---------- -->
+            <section id="page-course" class="page">
+                <div class="toolbar">
+                    <button class="btn-primary" onclick="openCourseModal()">新增课程</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr><th>课程编码</th><th>课程名称</th><th>学分</th>
+                            <th>类型</th><th>状态</th><th>操作</th></tr>
+                        </thead>
+                        <tbody id="courseTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ---------- 审计日志 ---------- -->
+            <section id="page-log" class="page">
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                        <tr><th>时间</th><th>成绩ID</th><th>操作人ID</th>
+                            <th>动作</th><th>修改前</th><th>修改后</th></tr>
+                        </thead>
+                        <tbody id="logTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+        </div>
+    </main>
+</div>
+
+<!-- ==================== 弹窗 ==================== -->
+<div id="modal" class="modal" style="display:none">
+    <div class="modal-box">
+        <div class="modal-header">
+            <h3 id="modalTitle">标题</h3>
+            <button onclick="closeModal()" class="modal-close">&times;</button>
+        </div>
+        <div class="modal-body" id="modalBody"></div>
+        <div class="modal-footer">
+            <button onclick="closeModal()" class="btn-secondary">取消</button>
+            <button onclick="submitModal()" class="btn-primary">确定</button>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

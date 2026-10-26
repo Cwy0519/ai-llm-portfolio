@@ -1,0 +1,17 @@
+# 构建产物
+target/
+*.class
+*.jar
+backend/data/
+
+# IDE
+.idea/
+.vscode/
+*.iml
+
+# 内置运行环境（体积大，用 README 里的方式自行安装）
+env/
+
+# 系统文件
+.DS_Store
+Thumbs.db

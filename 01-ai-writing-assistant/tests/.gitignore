@@ -1,0 +1,4 @@
+# 测试运行时产物
+.pytest_cache/
+# 由 tests/conftest.py 的临时目录策略生成，会话结束自动清理
+.pytest-tmp/
